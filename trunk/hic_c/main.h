@@ -29,4 +29,8 @@ void init_struct();
 /* free the struct and exit with the given exitCode */
 void leave(int exitCode);
 
-#define VERSION "0.0.6"
+/* check the given Threshold, print the Temperature and exit with the
+   exit code expected by the nagios server */
+void check_threshold(int temperature, int warning, int critical);
+
+#define VERSION "0.0.7"

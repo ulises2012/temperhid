@@ -1,5 +1,3 @@
-.\"Created with GNOME Manpages Editor Wizard
-.\"http://sourceforge.net/projects/gmanedit2
 .TH check_temper 1 "November 11, 2010" "" "TEMPer Nagios Plugin"
 
 .SH NAME
@@ -19,11 +17,42 @@ program. This program...
 
 .SH OPTIONS
 .B
-.IP -OPTION
-This option...
+.IP -b
+set the BUS:DEVICE where we will find the TEMPer device
+.B
+.IP -v
+specify the VENDOR:PRODUCT or a predefined value of the device should be used. \fBDefault\fP is 1130:660C (TEMPer HID device)
+.B
+.IP -w
+set the warning value
+.B
+.IP -c
+set the critical value
+.B
+.IP -d
+set the debug mode: Please use the range between 0 and 3, the default value will be \fB0\fP
+.B
+.IP -F
+every temperatur in-/output is fahrenheit now
+.B
+.IP -l
+list all supported devices the program founds on usb bus
+.B
+.IP -V
+prints the version of the program
+.B
+.IP -h
+prints the help
 
 .SH "EXIT STATUS"
-
+.IP 0
+The plugin checked the temperature and every thing was \fBOK\fP
+.IP 1
+The temperature reaches the \fBWARNING\fP threshold
+.IP 2
+The temperature reaches the \fBCRITICAL\fP threshold
+.IP 3
+An \fBUnknown\fP error encountered (e.g. uncomplete command line options or Internal device error)
 .SH NOTES
 
 .SH BUGS
