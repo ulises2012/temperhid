@@ -172,11 +172,18 @@ void leave(int exitCode){
 
 void check_threshold(int temperature, int warning, int critical){
   int exitCode = 0;
+  char *color = "\033[m";
   if (temperature >= critical){
     exitCode = 2;
+    color = "\033[31m";
   } else if (temperature >= warning) {
     exitCode = 1;
+    color = "\033[33m";
   }
-  printf("%d\n",temperature);
+  #if defined __coloredout__
+    printf("%s%d\n\033[m" ,color ,temperature);
+  #else
+    printf("%d\n" ,temperature);
+  #endif
   leave(exitCode);
 }
