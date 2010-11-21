@@ -30,27 +30,20 @@ int main (int argc, char **argv){
   char *value = NULL;
   char *ptr;
   char mode = 'r';
+  short fahrenheit = 0;
   
   init_struct();
 
-  while ((c = getopt(argc,argv,"hv:b:d:w:c:lV")) != -1){
+  while ((c = getopt(argc,argv,"hv:b:d:w:c:lVF")) != -1){
     switch (c){
       case 'h':/*-h Help*/
         printUsage(argv[0]);
         break;
       case 'b':/*Bus:Device*/
         value = optarg;
-//printf("%d\n",strlen(optarg));
         ptr = strtok(value,":");
-//        free(config->bus);
-//printf("\t%d %s\n",strlen(ptr),ptr);
-//        config->bus = (char *) malloc(strlen(ptr)+1);
-//        strcpy(config->bus, ptr);
         c_bus = ptr;
         ptr = strtok(NULL, ":");
-//        free(config->device);
-//        config->device = (char *) malloc(strlen(ptr)+1);
-//        strcpy(config->device, ptr);
         device = ptr;
         break;
       case 'd':/*debug 0..3*/
@@ -72,6 +65,9 @@ int main (int argc, char **argv){
       case 'V':/*Print version of this programm*/
         printf("USB Thermometer Nagios Plugin in Version: %s\n",VERSION);
         leave(3);
+        break;
+      case 'F':/*Set the output to fahrenheit*/
+        fahrenheit = 1;
         break;
       case 'v':/*define the vendor and product to use*/
         value = optarg;
@@ -110,7 +106,7 @@ int main (int argc, char **argv){
     }
     
     for (index = optind; index < argc; index++){
-         printf ("Non-option argument %s\n", argv[index]);
+         //printf ("Non-option argument %s\n", argv[index]);
     }
   }
   //TODO: struct testen und los laufen
@@ -130,7 +126,13 @@ int main (int argc, char **argv){
         printUsage(argv[0]);
       }
       init();
-      find_device();
+      //usbdev = find_device();
+      if (fahrenheit){
+        c = get_fahrenheit();
+      } else {
+        c = get_celsius();
+      }
+      check_threshold(c, warning, critical);
       break;
     default:
       printUsage(argv[0]);
@@ -166,4 +168,15 @@ void init_struct(){
 void leave(int exitCode){
   free(u_config);
   exit(exitCode);
+}
+
+void check_threshold(int temperature, int warning, int critical){
+  int exitCode = 0;
+  if (temperature >= critical){
+    exitCode = 2;
+  } else if (temperature >= warning) {
+    exitCode = 1;
+  }
+  printf("%d\n",temperature);
+  leave(exitCode);
 }
