@@ -29,4 +29,4 @@ void init_struct();
 /* free the struct and exit with the given exitCode */
 void leave(int exitCode);
 
-#define VERSION "0.0.5"
+#define VERSION "0.0.6"
