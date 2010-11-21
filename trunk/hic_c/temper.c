@@ -51,13 +51,13 @@ usb_dev_handle *find_device(){
     for (dev = bus->devices; dev; dev = dev->next) {
       usb_dev_handle *udev;
       /* Skip the USB Bus we don't need */
-      if (strcmp(bus->dirname, config->bus) && strcmp(dev->filename, config->device)){ //FIXME compaire char* with int
+      if (strcmp(bus->dirname, u_config->bus) && strcmp(dev->filename, u_config->device)){ //FIXME compaire char* with int
         continue;
       }
       if (debug>2) printf("%s:%s %04X:%04X\n",bus->dirname,
                        dev->filename,dev->descriptor.idVendor,dev->descriptor.idProduct);
       /* If we found the Vendor and the Product => read the temperature */
-      if (dev->descriptor.idVendor == config->vendor && dev->descriptor.idProduct == config->product){
+      if (dev->descriptor.idVendor == u_config->vendor && dev->descriptor.idProduct == u_config->product){
         if (debug>2) printf("Found\n");
         udev = usb_open(dev);
         if (udev){
