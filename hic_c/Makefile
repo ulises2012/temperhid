@@ -1,9 +1,20 @@
+################################################################
+#                                                              #
+################################################################
+
+#If you want a colored Output for 
+#COLOROUT=-D__coloredout__
+
+#If you need the Debuging Symbols
+#DEBUG=-ggdb
+
+#specify a path where we can find the .so files
+LIBRARY_PATH=/usr/lib/
+CFLAG=-Wall $(DEBUG) $(COLOROUT)
 BIN=bin
-INCLUDE=/usr/include/
-CFLAG=-Wall -ggdb
 
 all: prepair temper.o
-	$(CC) -L $(INCLUDE) -lusb temper.o main.o -o bin/temper -L.
+	$(CC) -L $(LIBRARY_PATH):. -lusb temper.o main.o -o bin/temper -O2
 
 temper.o:
 	$(CC) $(CFLAG) -c temper.c

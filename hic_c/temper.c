@@ -199,7 +199,7 @@ int read_temperature(usb_dev_handle *udev){
  
   if (debug>2)printf("read_temperatur\n");
   result = read_device(udev,request);
-  tmp = result[0] + (result[1]/256);
+  tmp = result[0] + (result[1]/256); //TODO On device error result[0] & result[1] will be 0
   if (debug>2)printf("return values: %d - %d - %d\n",result[0], result[1], result[1] <<8);
   usleep(400);
   result = read_device(udev,request);
