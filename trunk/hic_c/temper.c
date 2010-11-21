@@ -26,6 +26,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 void list_supported_devices(){
   struct usb_bus *bus;
   struct usb_device *dev;
+      printf("bus:dev name      (vendor:product)\n");
   for (bus = usb_busses; bus; bus= bus->next){
     for (dev = bus->devices; dev; dev = dev->next){
       if (dev->descriptor.idVendor == HidTEMPer_VENDOR && dev->descriptor.idProduct == HidTEMPer_PRODUCT){
@@ -51,7 +52,7 @@ usb_dev_handle *find_device(){
     for (dev = bus->devices; dev; dev = dev->next) {
       usb_dev_handle *udev;
       /* Skip the USB Bus we don't need */
-      if (strcmp(bus->dirname, u_config->bus) && strcmp(dev->filename, u_config->device)){ //FIXME compaire char* with int
+      if (strcmp(bus->dirname, c_bus) && strcmp(dev->filename, device)){
         continue;
       }
       if (debug>2) printf("%s:%s %04X:%04X\n",bus->dirname,

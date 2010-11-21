@@ -24,7 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "temper.h"
 
 int main (int argc, char **argv){
-  unsigned int c, index, critical, warning;
+  unsigned int c, index;
+  int critical, warning;
   opterr = 0;
   char *value = NULL;
   char *ptr;
@@ -39,17 +40,23 @@ int main (int argc, char **argv){
         break;
       case 'b':/*Bus:Device*/
         value = optarg;
+//printf("%d\n",strlen(optarg));
         ptr = strtok(value,":");
-        config->bus = (char *) malloc(sizeof(ptr));
-        strcpy(config->bus, ptr);
+//        free(config->bus);
+//printf("\t%d %s\n",strlen(ptr),ptr);
+//        config->bus = (char *) malloc(strlen(ptr)+1);
+//        strcpy(config->bus, ptr);
+        c_bus = ptr;
         ptr = strtok(NULL, ":");
-        config->device = (char *) malloc(sizeof(ptr));
-        strcpy(config->device, ptr);
+//        free(config->device);
+//        config->device = (char *) malloc(strlen(ptr)+1);
+//        strcpy(config->device, ptr);
+        device = ptr;
         break;
       case 'd':/*debug 0..3*/
         value = optarg;
         debug = atoi(value);
-        printf("=> debug level: %d\n",debug);
+        if (debug>2)printf("=> debug level: %d\n",debug);
         break;
       case 'c':/*Nagios: critical value*/
         value = optarg;
@@ -67,22 +74,21 @@ int main (int argc, char **argv){
         leave(3);
         break;
       case 'v':/*define the vendor and product to use*/
-        printf("vendor\n");
         value = optarg;
         if (!strcmp(value,"TEMPerV1")){
-          config->vendor = TEMPER_VENDOR;
-          config->product = TEMPER_PRODUCT;
-          printf("not implented yet\n");
+          u_config->vendor = TEMPER_VENDOR;
+          u_config->product = TEMPER_PRODUCT;
+          if (debug >2)printf("not implented yet\n");
           leave(3);
         } else if (!strcmp(value,"TEMPerHID")){
-          config->vendor = HidTEMPer_VENDOR;
-          config->product = HidTEMPer_PRODUCT;
+          u_config->vendor = HidTEMPer_VENDOR;
+          u_config->product = HidTEMPer_PRODUCT;
         } else if (strstr(value,":")){
           ptr = strtok(value,":");
-          config->vendor = strtol(ptr, NULL, 16);
+          u_config->vendor = strtol(ptr, NULL, 16);
           ptr = strtok(NULL,":");
-          config->product = strtol(ptr, NULL, 16);
-          printf("vendor: %04X; product: %04X\n", config->vendor, config->product);
+          u_config->product = strtol(ptr, NULL, 16);
+          if (debug>2)printf("vendor: %04X; product: %04X\n", u_config->vendor, u_config->product);
         } else {
           printf("Please define the VENDOR:PRODUCT like 1130:660C or give the "
                  "pre-defined Vendors (please have a look to the manual)\n");
@@ -114,10 +120,16 @@ int main (int argc, char **argv){
       list_supported_devices();
       break;
     case 'r':
-      init();
-      if (config->device == 0 && config->product == 0){
+      if (u_config->vendor == 0 && u_config->product == 0){
         printUsage(argv[0]);
       }
+      if (c_bus == NULL && device == NULL){
+        printUsage(argv[0]);
+      }
+      if (warning == 0 && critical == 0){
+        printUsage(argv[0]);
+      }
+      init();
       find_device();
       break;
     default:
@@ -143,15 +155,15 @@ void printUsage(char *prog){
 
 void init_struct(){
 
-  config = (struct usb_config *) malloc(sizeof(struct usb_config *));
+  u_config = (struct usb_config *) malloc(sizeof(struct usb_config *));
   
-  config->vendor = HidTEMPer_VENDOR;
-  config->product = HidTEMPer_PRODUCT;
+  u_config->vendor = HidTEMPer_VENDOR;
+  u_config->product = HidTEMPer_PRODUCT;
 
   debug = 0;
 } 
 
 void leave(int exitCode){
-  free(config);
+  free(u_config);
   exit(exitCode);
 }

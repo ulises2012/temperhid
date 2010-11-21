@@ -55,11 +55,14 @@ void cleanup(usb_dev_handle *udev);
 struct usb_config {
   unsigned int vendor;
   unsigned int product;
-  char *bus;
-  char *device;
+//  char *bus;
+//  char *device;
 };
 
-struct usb_config *config;
+char *c_bus;
+char *device;
+
+struct usb_config *u_config;
 
 int debug;
 
