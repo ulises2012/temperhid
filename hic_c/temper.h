@@ -20,8 +20,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef __TEMPER_H__
 #define __TEMPER_H__
 
-//The LibUSB (ver 0.1.x)
-#include <usb.h>
+#if defined(__LIBUSB_1_0__)
+  //The LibUSB (ver 1.0.x)
+  #include <libusb/libusb.h>
+  
+  //define alias for renamed functions
+  #define usb_init libusb_init
+  #define usb_exit libusb_exit
+  #define usb_set_debug lubusb_set_debug
+  
+  #define usb_device libusb_device
+
+#else
+  //The LibUSB (ver 0.1.x)
+  #include <usb.h>
+#endif
 
 //List of supported/known Vendor/Product IDs
 #include "vendors.h"
