@@ -1,13 +1,9 @@
-#summary One-sentence summary of this page.
+#summary Short overview to the Project.
 
 = Introduction =
 
-Add your content here.
-
+The goal is to write a Nagios Plugin to read the temperature from a TEMPer HID device unsing libusb.
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+
