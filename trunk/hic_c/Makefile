@@ -29,8 +29,11 @@ prepair:
 debug: temper.o
 	$(CC) $(CFLAG) -ggdb -L. -lusb temper.o main.o -o bin/temper
 
-install:
+install: rules-install
 	cp bin/temper /usr/lib/nagios/plugins/check_temper
+
+rules-install:
+	cp common/99-tempsensor.rules /etc/udev/rules.d/
 
 clean:
 	rm *.o
