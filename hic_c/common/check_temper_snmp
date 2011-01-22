@@ -1,0 +1,74 @@
+#!/bin/bash
+###########################################################
+#                                                         #
+#   Wrapper for the output of check_temper to use this    #
+#   programm for a custom exec command at snmp            #
+#                                                         #
+#   for help please visit the project page at google code #
+#            http://code.google.com/p/temperhid/          #
+#                                                         #
+#   This script and the programm is released unter the    #
+#   condition of the GNU GPLv3                            #
+#   http://www.gnu.org/licenses/gpl.html                  #
+#                                                         #
+#   @author Johannes Petrick                              #
+#   @version 0.1                                          #
+#                                                         #
+###########################################################
+
+# Known Issues
+# - the sed regex will fail if the check_temper ist compiled with coloured output
+
+
+if [ $# -le 3 ]; then
+  echo "usage of this script:"
+  echo "$0 -e /path/to/check_temper -b 00x:0xy"
+  echo " "
+  echo -e "\t-e \t executable"
+  echo -e "\t-b \t bus of device"
+  echo " "
+  echo "to get the device address please use check_temper -l"
+fi
+
+args=`getopt b:e:dF $*`
+set -- $args
+for i do
+  case "$i" in
+	-b)
+	  shift
+          shift
+	  BUS=$1
+	;;
+	-e)
+	  shift
+	  EXEC=$1
+	;;
+	-d)
+	  DEBUG=true
+	  echo "DEBUG MODE = on"
+	;;
+        -F)
+          F="-F"
+        ;;
+  esac
+done
+
+if [ $DEBUG ]; then
+  echo "exec: $EXEC"
+  echo "bus: $BUS"
+fi
+
+EXEC="$EXEC -b $BUS $F"
+
+if [ $DEBUG ]; then
+  echo "exec: $EXEC"
+fi
+
+RESULT=`$EXEC`
+
+if [ $DEBUG ]; then
+  echo "result: $RESULT"
+fi
+
+RESULT=`echo $RESULT | sed -e 's/[a-zA-Z ]*\(-[0-9]\{1,2\}\|[0-9]\{1,3\}\).*/\1/'`
+echo $RESULT

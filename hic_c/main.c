@@ -132,7 +132,7 @@ int main (int argc, char **argv){
       } else {
         c = get_celsius();
       }
-      check_threshold(c, warning, critical);
+      check_threshold(c, warning, critical, fahrenheit);
       break;
     default:
       printUsage(argv[0]);
@@ -170,20 +170,26 @@ void leave(int exitCode){
   exit(exitCode);
 }
 
-void check_threshold(int temperature, int warning, int critical){
+void check_threshold(int temperature, int warning, int critical, short fahrenheit){
   int exitCode = 0;
   char *color = "\033[m";
+  char unit = 'C';
+
+  if (fahrenheit){
+    unit = 'F';
+  }
+  
   if (temperature >= critical){
     exitCode = 2;
     color = "\033[31m";
   } else if (temperature >= warning) {
     exitCode = 1;
-    color = "\033[33m";
+    color = "\033[33m%s";
   }
   #if defined __coloredout__
-    printf("%s%d\n\033[m" ,color ,temperature);
+    printf("%s%d\n\033[m", color, temperature);
   #else
-    printf("%d\n" ,temperature);
+    printf("Temperature at %d °%c\n" , temperature, unit);
   #endif
   leave(exitCode);
 }
