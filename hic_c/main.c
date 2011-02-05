@@ -30,7 +30,7 @@ int main (int argc, char **argv){
   char *value = NULL;
   char *ptr;
   char mode = 'r';
-  short fahrenheit = 0;
+  char fahrenheit = 0;
   
   init_struct();
 
@@ -170,7 +170,7 @@ void leave(int exitCode){
   exit(exitCode);
 }
 
-void check_threshold(int temperature, int warning, int critical, short fahrenheit){
+void check_threshold(int temperature, int warning, int critical, char fahrenheit){
   int exitCode = 0;
   char *color = "\033[m";
   char unit = 'C';
@@ -187,7 +187,7 @@ void check_threshold(int temperature, int warning, int critical, short fahrenhei
     color = "\033[33m%s";
   }
   #if defined __coloredout__
-    printf("%s%d\n\033[m", color, temperature);
+    printf("%sTemperature at %d °%c\033[m\n", color, temperature, unit);
   #else
     printf("Temperature at %d °%c\n" , temperature, unit);
   #endif
