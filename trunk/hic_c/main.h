@@ -31,7 +31,7 @@ void leave(int exitCode);
 
 /* check the given Threshold, print the Temperature and exit with the
    exit code expected by the nagios server */
-void check_threshold(int temperature, int warning, int critical, short fahrenheit);
+void check_threshold(int temperature, int warning, int critical, char fahrenheit);
 
-#define VERSION "0.0.9"
+#define VERSION "0.0.10"
 
