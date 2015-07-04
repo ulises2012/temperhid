@@ -1,0 +1,1 @@
+A Nagios Plugin for the TEMPer HID Termometer
